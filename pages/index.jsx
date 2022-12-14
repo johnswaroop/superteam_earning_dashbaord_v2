@@ -450,7 +450,7 @@ export async function getServerSideProps(context) {
         let projectData = formatDate(createDate(entry['Date Given'])); // string
         let labelDate = formatDate(unixToDate(ele)); // unix date;
         if (projectData < labelDate) {
-
+          console.log("total", entry.totalPrize);
           sum.push([entry['Token'], entry.totalPrize]);
         }
       })
@@ -461,7 +461,7 @@ export async function getServerSideProps(context) {
       let sum = 0;
       dat.forEach((pair) => {
         if (pair[1] > 0) {
-
+          console.log("sum", tokenTimePriceMap[pair[0]][dateRangeArray[idx]]);
           sum = sum + tokenTimePriceMap[pair[0]][dateRangeArray[idx]] * pair[1]
         }
       })
