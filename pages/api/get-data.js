@@ -31,20 +31,14 @@ export async function getData(context) {
 
     let data = await Promise.all([redis.get('historic-price-data'), await axios.get(SHEET_URL)])
     let HISTORIC_DATA = JSON.parse(data[0]);
-    let tokenTimePriceMap = {};
-    Object.keys(HISTORIC_DATA).forEach((token) => {
-        tokenTimePriceMap[token] = {}
-        HISTORIC_DATA[token].forEach((time) => {
-            tokenTimePriceMap[token][time[0]] = time[1]
-        })
-    })
 
-    let sheetData = data[1].data
+
+    let sheetData = data[1].data;
 
     let todaysTotal = 0;
     sheetData.forEach((prj) => {
         try {
-            let amount = parseInt(prj['Total Earnings USD'].replaceAll(',', ''))
+            let amount = parseInt(prj['Total Earnings USD'].replace(/,/g, ''))
             todaysTotal = todaysTotal + amount;
         }
         catch (er) {
@@ -56,8 +50,8 @@ export async function getData(context) {
         let noOfTokens = 0;
         ['1st Prize', '2nd Prize', '3rd Prize'].forEach((pr) => {
             try {
-                if (parseInt(entry[pr].replaceAll(',', '')) > 0) {
-                    noOfTokens = noOfTokens + parseInt(entry[pr].replaceAll(',', ''));
+                if (parseInt(entry[pr].replace(/,/g, '')) > 0) {
+                    noOfTokens = noOfTokens + parseInt(entry[pr].replace(/,/g, ''));
                 }
             }
             catch (er) {
@@ -68,13 +62,29 @@ export async function getData(context) {
         return entry
     })
 
+    let ind_date = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Kolkata');
+
+    console.log(ind_date.data.datetime);
+
     const getDateRangeArray = (range_input) => {
         let rangeArray = [];
         for (let i = 0; i < 10; i++) {
-            rangeArray.push(`${addSubtractDate.subtract(new Date(), range_input * i, "days")}`)
+            rangeArray.push(`${addSubtractDate.subtract(formatDate(ind_date.data.datetime), range_input * i, "days")}`)
         }
         return rangeArray
     }
+
+    let tokenTimePriceMap = {};
+    Object.keys(HISTORIC_DATA).forEach((token) => {
+        tokenTimePriceMap[`${token}`] = {}
+        HISTORIC_DATA[token].forEach((time) => {
+            tokenTimePriceMap[`${token}`][`${time[0]}`] = time[1]
+        })
+    })
+
+    tokenTimePriceMap = { ...tokenTimePriceMap };
+
+    console.log(tokenTimePriceMap['USDT']['1633132800000']);
 
     const generateGraphData = (range_input, todaysTotal) => {
         let dateRangeArray = getDateRangeArray(range_input);
@@ -93,13 +103,11 @@ export async function getData(context) {
             return sum;
         })
 
-
         let dateTokenSumArray = dateTokenCountArray.map((dat, idx) => {
             let sum = 0;
             dat.forEach((pair) => {
                 if (pair[1] > 0) {
-                    console.log(tokenTimePriceMap[pair[0]][dateRangeArray[idx]]);
-                    sum = sum + parseInt(tokenTimePriceMap[pair[0]][dateRangeArray[idx]] * pair[1])
+                    sum = sum + (tokenTimePriceMap[`${pair[0]}`][`${dateRangeArray[idx]}`] * pair[1])
                 }
             })
             return sum
@@ -107,8 +115,8 @@ export async function getData(context) {
 
 
         let xAxis = [...dateTokenSumArray];
+        console.log(xAxis)
         xAxis[0] = todaysTotal;
-        console.log(xAxis);
         xAxis = xAxis.map((ele) => {
             return ele || 0
         })
