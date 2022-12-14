@@ -79,8 +79,8 @@ export default function Home({ sheetData, graphData, todaysTotal }) {
     let noOfTokens = 0;
     ['1st Prize', '2nd Prize', '3rd Prize'].forEach((pr) => {
       try {
-        if (parseInt(entry[pr].replaceAll(',', '')) > 0) {
-          noOfTokens = noOfTokens + parseInt(entry[pr].replaceAll(',', ''));
+        if (parseInt(entry[pr].replace(/,/g, '')) > 0) {
+          noOfTokens = noOfTokens + parseInt(entry[pr].replace(/,/g, ''));
         }
       }
       catch (er) {
@@ -98,7 +98,7 @@ export default function Home({ sheetData, graphData, todaysTotal }) {
   })
   positionCombinedSheet.forEach((entry) => {
     try {
-      let total = parseInt(entry['Total Earnings USD'].replaceAll(',', ''))
+      let total = parseInt(entry['Total Earnings USD'].replace(/,/g, ''))
       if (total > 0) {
         rainMakerList[entry['Rainmaker']] = rainMakerList[entry['Rainmaker']] + total;
       }
@@ -119,7 +119,7 @@ export default function Home({ sheetData, graphData, todaysTotal }) {
   })
   positionCombinedSheet.forEach((entry) => {
     try {
-      let total = parseInt(entry['Total Earnings USD'].replaceAll(',', ''))
+      let total = parseInt(entry['Total Earnings USD'].replace(/,/g, ''))
       if (total > 0) {
         sponsorList[entry['Sponsor']] = sponsorList[entry['Sponsor']] + total;
       }
@@ -407,7 +407,7 @@ export async function getServerSideProps(context) {
   let todaysTotal = 0;
   sheetData.forEach((prj) => {
     try {
-      let amount = parseInt(prj['Total Earnings USD'].replaceAll(',', ''))
+      let amount = parseInt(prj['Total Earnings USD'].replace(/,/g, ''))
       todaysTotal = todaysTotal + amount;
     }
     catch (er) {
@@ -419,8 +419,8 @@ export async function getServerSideProps(context) {
     let noOfTokens = 0;
     ['1st Prize', '2nd Prize', '3rd Prize'].forEach((pr) => {
       try {
-        if (parseInt(entry[pr].replaceAll(',', '')) > 0) {
-          noOfTokens = noOfTokens + parseInt(entry[pr].replaceAll(',', ''));
+        if (parseInt(entry[pr].replace(/,/g, '')) > 0) {
+          noOfTokens = noOfTokens + parseInt(entry[pr].replace(/,/g, ''));
         }
       }
       catch (er) {
@@ -450,7 +450,7 @@ export async function getServerSideProps(context) {
         let projectData = formatDate(createDate(entry['Date Given'])); // string
         let labelDate = formatDate(unixToDate(ele)); // unix date;
         if (projectData < labelDate) {
-          console.log("true");
+
           sum.push([entry['Token'], entry.totalPrize]);
         }
       })
@@ -461,7 +461,7 @@ export async function getServerSideProps(context) {
       let sum = 0;
       dat.forEach((pair) => {
         if (pair[1] > 0) {
-          console.log("true two");
+
           sum = sum + tokenTimePriceMap[pair[0]][dateRangeArray[idx]] * pair[1]
         }
       })
@@ -470,6 +470,7 @@ export async function getServerSideProps(context) {
 
 
     let xAxis = [...dateTokenSumArray];
+    console.log(xAxis)
     xAxis[0] = todaysTotal;
     xAxis = xAxis.map((ele) => {
       return ele || 0
