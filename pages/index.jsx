@@ -395,6 +395,7 @@ export async function getServerSideProps(context) {
   let data = await Promise.all([redis.get('historic-price-data'), await axios.get(SHEET_URL)])
   let HISTORIC_DATA = JSON.parse(data[0]);
   let tokenTimePriceMap = {};
+
   Object.keys(HISTORIC_DATA).forEach((token) => {
     tokenTimePriceMap[token] = {}
     HISTORIC_DATA[token].forEach((time) => {
@@ -402,7 +403,9 @@ export async function getServerSideProps(context) {
     })
   })
 
-  let sheetData = data[1].data
+  console.log(tokenTimePriceMap);
+
+  let sheetData = data[1].data;
 
   let todaysTotal = 0;
   sheetData.forEach((prj) => {
@@ -460,7 +463,6 @@ export async function getServerSideProps(context) {
       let sum = 0;
       dat.forEach((pair) => {
         if (pair[1] > 0) {
-          console.log(tokenTimePriceMap[pair[0]][dateRangeArray[idx]]);
           sum = sum + (tokenTimePriceMap[pair[0]][dateRangeArray[idx]] * pair[1])
         }
       })
