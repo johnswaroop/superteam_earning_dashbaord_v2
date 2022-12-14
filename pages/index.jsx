@@ -188,8 +188,7 @@ export default function Home({ tokenTimePriceMap, sheetData }) {
     return b[1] - a[1]
   });
 
-  let xAxis = [...graphData]
-  xAxis[0] = todaysTotal;
+
 
 
   const [data, setdata] = useState(null);
@@ -199,6 +198,9 @@ export default function Home({ tokenTimePriceMap, sheetData }) {
   }
 
   useEffect(() => {
+    let xAxis = [...graphData]
+    xAxis[0] = todaysTotal;
+    console.log(xAxis);
     graphData && setdata({
       ...{
         labels: dateRangeArrayState.map((ele) => { console.log(ele); return formatDate(unixToDate(ele)).toLocaleDateString() }).reverse(),
