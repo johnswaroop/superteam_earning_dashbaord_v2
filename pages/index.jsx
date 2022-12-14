@@ -428,7 +428,7 @@ export async function getServerSideProps(context) {
   const getDateRangeArray = (range_input) => {
     let rangeArray = [];
     for (let i = 0; i < 10; i++) {
-      rangeArray.push(`${addSubtractDate.subtract(new Date(), range_input * i, "days")}`)
+      rangeArray.push(`${addSubtractDate.subtract(formatDate(new Date()), range_input * i, "days")}`)
     }
     return rangeArray
   }
