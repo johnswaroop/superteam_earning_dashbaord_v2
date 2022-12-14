@@ -194,7 +194,7 @@ export default function Home({ tokenTimePriceMap, sheetData }) {
   const [data, setdata] = useState(null);
 
   useEffect(() => {
-    setdata({
+    graphData && setdata({
       ...{
         labels: dateRangeArrayState.map((ele) => { console.log(ele); return unixToDate(ele).toLocaleDateString() }).reverse(),
         datasets: [
