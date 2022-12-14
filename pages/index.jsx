@@ -108,8 +108,8 @@ export default function Home({ tokenTimePriceMap, sheetData }) {
     let dateTokenCountArray = dateRangeArray.map((ele) => {
       let sum = [];
       positionCombinedSheet.forEach((entry) => {
-        let projectData = createDate(entry['Date Given']); // string
-        let labelDate = unixToDate(ele); // unix date;
+        let projectData = formatDate(createDate(entry['Date Given'])); // string
+        let labelDate = formatDate(unixToDate(ele)); // unix date;
         if (projectData < labelDate) {
           sum.push([entry['Token'], entry.totalPrize]);
         }
