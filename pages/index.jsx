@@ -425,6 +425,8 @@ export async function getServerSideProps(context) {
     return entry
   })
 
+  console.log(getUnixTime(formatDate(new Date())));
+
   const getDateRangeArray = (range_input) => {
     let rangeArray = [];
     for (let i = 0; i < 10; i++) {
