@@ -456,23 +456,19 @@ export async function getServerSideProps(context) {
       return sum;
     })
 
-
     let dateTokenSumArray = dateTokenCountArray.map((dat, idx) => {
       let sum = 0;
       dat.forEach((pair) => {
         if (pair[1] > 0) {
-          console.log(tokenTimePriceMap[pair[0]][dateRangeArray[idx]]);
           sum = sum + parseInt(tokenTimePriceMap[pair[0]][dateRangeArray[idx]] * pair[1])
         }
       })
-      console.log(sum,);
       return sum
     })
 
 
     let xAxis = [...dateTokenSumArray];
     xAxis[0] = todaysTotal;
-    console.log(xAxis);
     xAxis = xAxis.map((ele) => {
       return ele || 0
     })

@@ -102,7 +102,6 @@ export async function getData(context) {
                     sum = sum + parseInt(tokenTimePriceMap[pair[0]][dateRangeArray[idx]] * pair[1])
                 }
             })
-            console.log(sum,);
             return sum
         })
 
