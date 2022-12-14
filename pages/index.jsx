@@ -5,7 +5,8 @@ import redis from '../lib/redis'
 import axios from 'axios'
 import addSubtractDate from 'add-subtract-date'
 import React, { useEffect, useState } from 'react';
-
+import timestamp from 'unix-timestamp'
+import moment from 'moment/moment'
 
 import {
   Chart as ChartJS,
@@ -193,10 +194,14 @@ export default function Home({ tokenTimePriceMap, sheetData }) {
 
   const [data, setdata] = useState(null);
 
+  var formatDate = (dateString) => {
+    return moment(dateString).toDate()
+  }
+
   useEffect(() => {
     graphData && setdata({
       ...{
-        labels: dateRangeArrayState.map((ele) => { console.log(ele); return unixToDate(ele).toLocaleDateString() }).reverse(),
+        labels: dateRangeArrayState.map((ele) => { console.log(ele); return formatDate(unixToDate(ele)).toLocaleDateString() }).reverse(),
         datasets: [
           {
             label: 'Dataset 1',
