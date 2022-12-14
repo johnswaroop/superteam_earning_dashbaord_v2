@@ -392,13 +392,6 @@ let SHEET_URL = `https://api.steinhq.com/v1/storages/62e2315abca21f053ea5d9c6/Bo
 
 export async function getServerSideProps(context) {
 
-  if (!String.prototype.replaceAll) {
-    String.prototype.replaceAll = function (search, replacement) {
-      var target = this;
-      return target.replace(new RegExp(search, "g"), replacement);
-    };
-  }
-
   let data = await Promise.all([redis.get('historic-price-data'), await axios.get(SHEET_URL)])
   let HISTORIC_DATA = JSON.parse(data[0]);
   let tokenTimePriceMap = {};
