@@ -462,7 +462,7 @@ export async function getServerSideProps(context) {
       dat.forEach((pair) => {
         if (pair[1] > 0) {
           console.log("true two");
-          sum = sum + parseInt(tokenTimePriceMap[pair[0]][dateRangeArray[idx]] * pair[1])
+          sum = sum + tokenTimePriceMap[pair[0]][dateRangeArray[idx]] * pair[1]
         }
       })
       return sum
