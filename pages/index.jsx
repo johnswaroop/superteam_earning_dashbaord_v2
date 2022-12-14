@@ -91,8 +91,6 @@ export default function Home({ sheetData, graphData, todaysTotal }) {
     return entry
   })
 
-
-
   //rain maker list
   let rainMakerList = {};
   positionCombinedSheet.forEach((entry) => {
@@ -390,8 +388,8 @@ var formatDate = (dateString) => {
 }
 
 
-
 let SHEET_URL = `https://api.steinhq.com/v1/storages/62e2315abca21f053ea5d9c6/Bounties%20Paid`;
+
 export async function getServerSideProps(context) {
   let data = await Promise.all([redis.get('historic-price-data'), await axios.get(SHEET_URL)])
   let HISTORIC_DATA = JSON.parse(data[0]);
@@ -456,6 +454,8 @@ export async function getServerSideProps(context) {
       })
       return sum;
     })
+
+
     let dateTokenSumArray = dateTokenCountArray.map((dat, idx) => {
       let sum = 0;
       dat.forEach((pair) => {
@@ -467,16 +467,19 @@ export async function getServerSideProps(context) {
       console.log(sum,);
       return sum
     })
+
+
     let xAxis = [...dateTokenSumArray];
     xAxis[0] = todaysTotal;
     console.log(xAxis);
     xAxis = xAxis.map((ele) => {
       return ele || 0
     })
+
     return (
       {
         ...{
-          labels: dateRangeArray.map((ele) => { console.log(ele); return formatDate(unixToDate(ele)).toLocaleDateString() }).reverse(),
+          labels: dateRangeArray.map((ele) => { return (formatDate(unixToDate(ele)).toLocaleDateString()); }).reverse(),
           datasets: [
             {
               label: 'Dataset 1',
@@ -491,6 +494,7 @@ export async function getServerSideProps(context) {
       }
     )
   }
+
   // const RANGE = { '3D': 3, 'W': 7, 'M': 30, '3M': 90 }
   let graphData = {
     '3': generateGraphData(RANGE['3D'], todaysTotal),
