@@ -394,15 +394,6 @@ export async function getServerSideProps(context) {
 
   let data = await Promise.all([redis.get('historic-price-data'), await axios.get(SHEET_URL)])
   let HISTORIC_DATA = JSON.parse(data[0]);
-  let tokenTimePriceMap = {};
-
-  Object.keys(HISTORIC_DATA).forEach((token) => {
-    tokenTimePriceMap[token] = {}
-    HISTORIC_DATA[token].forEach((time) => {
-      tokenTimePriceMap[token][time[0]] = time[1]
-    })
-  })
-
 
 
   let sheetData = data[1].data;
@@ -442,6 +433,16 @@ export async function getServerSideProps(context) {
     return rangeArray
   }
 
+  let tokenTimePriceMap = {};
+  Object.keys(HISTORIC_DATA).forEach((token) => {
+    tokenTimePriceMap[token] = {}
+    HISTORIC_DATA[token].forEach((time) => {
+      tokenTimePriceMap[token][time[0]] = time[1]
+    })
+  })
+
+  tokenTimePriceMap = { ...tokenTimePriceMap };
+
   const generateGraphData = (range_input, todaysTotal) => {
     let dateRangeArray = getDateRangeArray(range_input);
     dateRangeArray = dateRangeArray.map((ele) => {
@@ -463,8 +464,8 @@ export async function getServerSideProps(context) {
       let sum = 0;
       dat.forEach((pair) => {
         if (pair[1] > 0) {
-          console.log(tokenTimePriceMap[pair[0]][`${dateRangeArray[idx]}`]);
-          sum = sum + (tokenTimePriceMap[pair[0]][`${dateRangeArray[idx]}`] * pair[1])
+          console.log(tokenTimePriceMap[`${pair[0]}`][`${dateRangeArray[idx]}`]);
+          sum = sum + (tokenTimePriceMap[`${pair[0]}`][`${dateRangeArray[idx]}`] * pair[1])
         }
       })
       return sum
