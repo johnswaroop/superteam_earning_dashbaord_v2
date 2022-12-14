@@ -62,14 +62,14 @@ export async function getData(context) {
         return entry
     })
 
-    let ind_date = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Kolkata');
+    // let ind_date = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Kolkata');
 
     console.log(ind_date.data.datetime);
 
     const getDateRangeArray = (range_input) => {
         let rangeArray = [];
         for (let i = 0; i < 10; i++) {
-            rangeArray.push(`${addSubtractDate.subtract(formatDate(ind_date.data.datetime), range_input * i, "days")}`)
+            rangeArray.push(`${addSubtractDate.subtract(formatDate(new Date()), range_input * i, "days")}`)
         }
         return rangeArray
     }
